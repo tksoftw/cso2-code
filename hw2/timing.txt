@@ -1,0 +1,16 @@
+timing estimates (for portal)
+Scenario 1: 0.3464ns
+Scenario 2: 11.2990ns
+Scenario 3: 566.8837ns
+Scenario 4: 52393.4703ns
+Scenario 5: 8509.9338ns
+Scenario 6: 121025.7398ns
+Scenario 7: 3916800.9084ns
+Scenario 8: 28505.4582ns
+
+For all scenario timing:
+I set the scenario run times, N, to either 1000 or 1M depending on the scenario (the fork ones took way longer, so I had to decrease the time)
+Then I warmed the function exactly N/10 times, ignoring the return value by casting it to void.
+Next I took the average of all N scenario runs minus the (warmed+averaged in the same way) overhead and returned that to the stdout.
+After that I used python (timing_test.py) to run each ./gettimings {scenario_n} 10 times and average accross all the printed values.
+Finally, I rounded each of the results to the nearest 4 decimal places and placed them in the table above.
