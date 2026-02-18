@@ -40,10 +40,10 @@ void labStuff(int which) {
             -1,                     // fd (none)
             0                       // offset
         ); // remap 1MiB (256 pages) to fresh AoD pages
-        (void)mapped_addr[0]; // fault
-        (void)mapped_addr[2]; // no fault
-        (void)mapped_addr[4097]; // fault
-        (void)mapped_addr[6767]; // no fault
+        mapped_addr[0] = '1';    // fault
+        mapped_addr[2] = '1';    // no fault
+        mapped_addr[4097] = '1'; // fault
+        mapped_addr[6767] = '1'; // no fault
 
     } else if (which == 3) {
         
