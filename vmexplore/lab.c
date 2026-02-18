@@ -82,7 +82,25 @@ void labStuff(int which) {
         ); // map 1KiB (1 page) to a fresh AoD page
          
         mapped_addr[0] = '1'; // touch to trigger AoD
+    } else if (which == 5) {
+        // heap location: 55555555a000-5555555bbfff
+        int flags = MAP_PRIVATE | MAP_ANON | MAP_FIXED_NOREPLACE;
+        long heap_end = 0x5555555bbfff;
+        long offset = 0x10000000000;
+        long addr = heap_end + offset;
+        if (addr % 4096 != 0) addr += (4096 - addr%4096);
+        char* mapped_addr = mmap(
+            (void*)addr,            // addr
+            4096,                   // size
+            PROT_READ | PROT_WRITE, // prot 
+            flags,                  // flags
+            -1,                     // fd (none)
+            0                       // offset
+        ); // map 1KiB (1 page) to a fresh AoD page
+         
+        mapped_addr[0] = '1'; // touch to trigger AoD
     }
+
 }
 
 int main(int argc, char **argv) {
