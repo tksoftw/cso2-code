@@ -67,7 +67,7 @@ void labStuff(int which) {
 
     } else if (which == 4) {
         // heap location: 55555555a000-5555555bbfff
-        int flags = MAP_PRIVATE | MAP_ANON | MAP_FIXED;
+        int flags = MAP_PRIVATE | MAP_ANON | MAP_FIXED_NOREPLACE;
         long heap_end = 0x5555555bbfff;
         long offset = 0x200000;
         long addr = heap_end + offset;
@@ -79,14 +79,9 @@ void labStuff(int which) {
             flags,                  // flags
             -1,                     // fd (none)
             0                       // offset
-        ); // map 1MiB (256 pages) to fresh AoD pages
+        ); // map 1KiB (1 page) to a fresh AoD page
          
         mapped_addr[0] = '1'; // touch to trigger AoD
-
-        // touch all 256 pages
-        for (int i = 1; i < 32; i++) {
-            mapped_addr[4096*i] = '1';
-        }
     }
 }
 
