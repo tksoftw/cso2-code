@@ -1,6 +1,0 @@
-IR-PCI-MSI 2097152-edge enp4s0-TxRx-0: CPU11:+     3 
-IR-PCI-MSI 2097158-edge enp4s0-TxRx-6: CPU13:+     4 
-IR-PCI-MSI 2097165-edge enp4s0-TxRx-13: CPU12:+     1 
-IR-PCI-MSI 2097166-edge enp4s0-TxRx-14: CPU 3:+     2 
-Function call interrupts  : CPU 0:+     7 
-Local timer interrupts    : CPU 0:+     7 CPU 1:+     7 CPU 2:+     7 CPU 3:+     1 CPU 4:+     7 CPU 5:+     2 CPU 6:+     7 CPU 7:+     5 CPU 8:+     7 CPU10:+     1 CPU11:+     7 CPU13:+     8 CPU14:+     2 CPU15:+     6 
