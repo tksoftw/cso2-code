@@ -68,10 +68,10 @@ void labStuff(int which) {
     } else if (which == 4) {
         // heap location: 55555555a000-5555555bbfff
         int flags = MAP_PRIVATE | MAP_ANON | MAP_FIXED_NOREPLACE;
-        long heap_end = 0x55555555a000;
+        long heap_end = 0x5555555bbfff;
         long offset = 0x200000;
         long addr = heap_end + offset;
-        if ((addr % 4096) != 0) addr += 4096;
+        if (addr % 4096 != 0) addr += (4096 - addr%4096);
         char* mapped_addr = mmap(
             (void*)addr,            // addr
             4096,                   // size
