@@ -13,7 +13,7 @@ void labStuff(int which) {
         /* do nothing */
     } else if (which == 1) {
         
-        memset(global_array, 0, 4096); // writes in just 1 page => 1 page fault
+        memset((void*)global_array, 0, 4096); // writes in just 1 page => 1 page fault
         
         int flags = MAP_PRIVATE | MAP_ANON | MAP_FIXED;
         (void*)mmap(
