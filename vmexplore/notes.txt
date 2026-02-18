@@ -1,0 +1,44 @@
+int flags = MAP_PRIVATE | MAP_ANON | MAP_FIXED;
+/*
+flags explanation: 
+MAP_PRIVATE
+        Create a private copy-on-write mapping.  Updates to the
+        mapping are not visible to other processes mapping the same
+        file, and are not carried through to the underlying file.
+        It is unspecified whether changes made to the file after
+        the mmap() call are visible in the mapped region.
+MAP_ANONYMOUS (also MAP_ANON)
+        The mapping is not backed by any file; its contents are
+        initialized to zero.  The fd argument is ignored; however,
+        some implementations require fd to be -1 if MAP_ANONYMOUS
+        (or MAP_ANON) is specified, and portable applications
+        should ensure this.  The offset argument should be zero.
+        Support for MAP_ANONYMOUS in conjunction with MAP_SHARED
+        was added in Linux 2.4.
+MAP_FIXED
+        Don't interpret addr as a hint: place the mapping at
+        exactly that address.  addr must be suitably aligned: for
+        most architectures a multiple of the page size is
+        sufficient; however, some architectures may impose
+        additional restrictions.  If the memory region specified by
+        addr and length overlaps pages of any existing mapping(s),
+        then the overlapped part of the existing mapping(s) will be
+        discarded.  If the specified address cannot be used, mmap()
+        will fail.
+
+        Software that aspires to be portable should use the
+        MAP_FIXED flag with care, keeping in mind that the exact
+        layout of a process's memory mappings is allowed to change
+        significantly between Linux versions, C library versions,
+        and operating system releases.  Carefully read the
+        discussion of this flag in NOTES!
+*/
+char* mapped_addr = mmap(
+    global_array,           // addr
+    4096,                   // size
+    PROT_READ | PROT_WRITE, // prot 
+    flags,                  // flags
+    -1,                     // fd
+    0                       // offset
+);  /* ON RETURN: Maps 4096 Copy-on-write bytes starting from global_array
+        * so, should all be within 1 page -> 1 page fault */
