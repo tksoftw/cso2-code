@@ -15,19 +15,19 @@ void labStuff(int which) {
         
         memset((void*)global_array, 0, 4096); // writes in just 1 page => 1 page fault
         
-        int flags = MAP_PRIVATE | MAP_ANON | MAP_FIXED;
-        (void*)mmap(
-            (void*)global_array,           // addr
-            4096,                   // size
-            PROT_READ | PROT_WRITE, // prot 
-            flags,                  // flags
-            -1,                     // fd (none)
-            0                       // offset
-        ); // remap first 4096 bytes (1 page) to a fresh AoD page
+        // int flags = MAP_PRIVATE | MAP_ANON | MAP_FIXED;
+        // (void*)mmap(
+        //     (void*)global_array,           // addr
+        //     4096,                   // size
+        //     PROT_READ | PROT_WRITE, // prot 
+        //     flags,                  // flags
+        //     -1,                     // fd (none)
+        //     0                       // offset
+        // ); // remap first 4096 bytes (1 page) to a fresh AoD page
         
-        memset((void*)global_array, 0, 8192); // write crosses 2 pages => 2 page fault
+        // memset((void*)global_array, 0, 8192); // write crosses 2 pages => 2 page fault
         
-        memset((void*)global_array, 1, 8192); // should incur no page fault
+        // memset((void*)global_array, 1, 8192); // should incur no page fault
     
     } else if (which == 2) {
         long one_mib = 1024*1024; // (guarenteed to be aligned bc a multiple of pg size)
