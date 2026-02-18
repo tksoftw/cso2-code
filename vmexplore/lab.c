@@ -17,7 +17,7 @@ void labStuff(int which) {
         
         int flags = MAP_PRIVATE | MAP_ANON | MAP_FIXED;
         char* mapped_addr = mmap(
-            global_array,           // addr
+            (void*)global_array,           // addr
             4096,                   // size
             PROT_READ | PROT_WRITE, // prot 
             flags,                  // flags
@@ -25,9 +25,9 @@ void labStuff(int which) {
             0                       // offset
         ); // remap first 4096 bytes (1 page) to a fresh AoD page
         
-        memset(global_array, 0, 8192); // write crosses 2 pages => 2 page fault
+        memset((void*)global_array, 0, 8192); // write crosses 2 pages => 2 page fault
         
-        memset(global_array, 1, 8192); // should incur no page fault
+        memset((void*)global_array, 1, 8192); // should incur no page fault
     
     } else if (which == 2) {
         long one_mib = 1024*1024; // (guarenteed to be aligned bc a multiple of pg size)
@@ -40,10 +40,10 @@ void labStuff(int which) {
             -1,                     // fd (none)
             0                       // offset
         ); // remap 1MiB (256 pages) to fresh AoD pages
-        mapped_addr[0]; // fault
-        mapped_addr[2]; // no fault
-        mapped_addr[4097]; // fault
-        mapped_addr[6767]; // no fault
+        (void)mapped_addr[0]; // fault
+        (void)mapped_addr[2]; // no fault
+        (void)mapped_addr[4097]; // fault
+        (void)mapped_addr[6767]; // no fault
 
     } else if (which == 3) {
         
