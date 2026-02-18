@@ -80,6 +80,7 @@ void labStuff(int which) {
             -1,                     // fd (none)
             0                       // offset
         ); // map 1MiB (256 pages) to fresh AoD pages
+        mapped_addr[0] = '1'; // touch to trigger AoD
     }
 }
 
