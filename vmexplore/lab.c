@@ -28,7 +28,7 @@ void labStuff(int which) {
         memset((void*)global_array, 0, 8192); // write crosses 2 pages => 2 page fault
         
         memset((void*)global_array, 1, 8192); // should incur no page fault
-    
+
     } else if (which == 2) {
         long one_mib = 1024*1024; // (guarenteed to be aligned bc a multiple of pg size)
         int flags = MAP_PRIVATE | MAP_ANON;
@@ -39,14 +39,32 @@ void labStuff(int which) {
             flags,                  // flags
             -1,                     // fd (none)
             0                       // offset
-        ); // remap 1MiB (256 pages) to fresh AoD pages
+        ); // map 1MiB (256 pages) to fresh AoD pages
+        
+        // NOTE: doesn't fault on just accesses bc of compiler optimizations (?)
         mapped_addr[0] = '1';    // fault
         mapped_addr[2] = '1';    // no fault
         mapped_addr[4097] = '1'; // fault
         mapped_addr[6767] = '1'; // no fault
-
-    } else if (which == 3) {
         
+    } else if (which == 3) {
+        long one_mib = 1024*1024; // (guarenteed to be aligned bc a multiple of pg size)
+        int flags = MAP_PRIVATE | MAP_ANON;
+        char* mapped_addr = mmap(
+            0,                      // addr (automatic)
+            one_mib,                // size
+            PROT_READ | PROT_WRITE, // prot 
+            flags,                  // flags
+            -1,                     // fd (none)
+            0                       // offset
+        ); // map 1MiB (256 pages) to fresh AoD pages
+        
+        // touch 128KiB (32 pages) of the 256
+        // fewest page faults = 1 per page
+        for (int i = 0; i < 32; i++) {
+            mapped_addr[4096*i] = '1';
+        }
+
     } else if (which == 4) {
 
     }
