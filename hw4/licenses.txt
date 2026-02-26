@@ -1,0 +1,11 @@
+instructions:
+
+In licenses.txt, list at least three licenses you considered, include a short (sentence or two) summary of what they seemed to say (ideally focused on the factors that mattered to you). Then describe briefly (sentence or two) why you chose the license you chose.
+
+Your review should include
+
+at least one of GPL, LGPL, or AGPL
+at least one of MIT, BSD, Boost, Apache, or SQLite
+All should be software licenses; this excludes licenses such as the various CC licenses for creative works, the SIL Open Font License, operating system licenses, etc.
+
+todo: GPL, MIT
