@@ -1,0 +1,17 @@
+Checks: >
+  readability-identifier-naming,
+  readability-braces-around-statements,
+  bugprone-suspicious-semicolon,
+  performance-inefficient-increment,
+  readability-function-size,
+  modernize-use-using,
+  -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling
+
+FormatStyle: file
+
+CheckOptions:
+  - { key: readability-identifier-naming.VariableCase, value: lower_case }
+  - { key: readability-identifier-naming.FunctionCase, value: lower_case }
+  - { key: readability-identifier-naming.MacroDefinitionCase, value: UPPER_CASE }
+  - { key: readability-braces-around-statements.ShortStatementLines, value: 0 }
+  - { key: readability-function-size.LineThreshold, value: 80 }
