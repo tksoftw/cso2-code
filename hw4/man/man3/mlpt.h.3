@@ -1,0 +1,51 @@
+.TH "mlpt.h" 3 "Version 1.0" "Virtual Pagetables" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+mlpt.h
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "size_t \fBtranslate\fP (size_t va)"
+.br
+.ti -1c
+.RI "int \fBallocate_page\fP (size_t start_va)"
+.br
+.ti -1c
+.RI "int \fBdeallocate_page\fP (size_t start_va)"
+.br
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "size_t \fBptbr\fP"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int allocate_page (size_t start_va)"
+Allocates and maps the virtual page which starts at virtual address \fCstart_va\fP (if it is not allocated ready)\&.
+.PP
+If \fCstart_va\fP is not the address at the start of a page, returns \fC-1\fP\&. If \fCstart_va\fP is the address at the start of a page, but the page is already allocated, returns \fC0\fP; otherwise, returns \fC1\fP\&.
+.PP
+Any data pages and page tables not yet allocated will be allocated using \fCposix_memalign\fP\&. (Any data page or page tables already created, such as by a prior call to \fCallocate_page\fP will be reused\&. If the mapping is already entirely setup, the function should not change page tables\&.) 
+.SS "int deallocate_page (size_t start_va)"
+Deallocates and unmaps the virtual page which starts at virtual address \fCva\fP (if it is not deallocated already)\&.
+.PP
+If \fCstart_va\fP is not the address at the start of a page, returns \fC-1\fP\&. If \fCstart_va\fP is the address at the start of a page, but the page is already deallocated, returns \fC0\fP; otherwise, returns \fC1\fP\&.
+.PP
+The data page which \fCva\fP points to will be deallocated with \fCfree\fP\&. Additionally, any page table(s) already created, such as by a prior call to \fCallocate_page\fP will be walked backwards\&. If the page table has zero entries left, it will also be deallocated\&. 
+.SS "size_t translate (size_t va)"
+Given a virtual address, return the physical address\&. Return a value consisting of all 1 bits if this virtual address does not have a physical address\&. 
+.SH "Variable Documentation"
+.PP 
+.SS "size_t ptbr\fC [extern]\fP"
+Page table base register\&. Declared here so tester code can look at it; because it is extern you'll need to define it (without extern) in exactly one \&.c file\&. 
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Virtual Pagetables from the source code\&.
