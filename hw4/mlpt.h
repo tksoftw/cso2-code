@@ -1,3 +1,6 @@
+#ifndef MLPT_H_
+#define MLPT_H_
+
 /**
  * Page table base register.
  * Declared here so tester code can look at it; because it is extern
@@ -27,3 +30,21 @@ size_t translate(size_t va);
  * setup, the function should not change page tables.)
  */
 int allocate_page(size_t start_va);
+
+
+/**
+ * Deallocates and unmaps the virtual page which starts at virtual address `va`
+ * (if it is not deallocated already).
+ *
+ * If `start_va` is not the address at the start of a page, returns `-1`.
+ * If `start_va` is the address at the start of a page, but the
+ * page is already deallocated, returns `0`; otherwise, returns `1`.
+ *
+ * The data page which `va` points to will be deallocated with `free`.
+ * Additionally, any page table(s) already created, such as by a prior
+ * call to `allocate_page` will be walked backwards. If the page table has 
+ * zero entries left, it will also be deallocated.
+ */
+int deallocate_page(size_t start_va);
+
+#endif

@@ -8,6 +8,8 @@
 #define VALID_BIT 1ULL
 #define PT_BYTES_SHIFT 3
 #define PAGE_SIZE (1ULL << POBITS)
+#define PTE_SIZE (1ULL << PT_BYTES_SHIFT)
+#define DATA_PAGE_INDEX 0
 
 size_t ptbr = 0;
 
@@ -18,7 +20,7 @@ static inline size_t *pte_addr_at_level(size_t full_va, size_t level, size_t bas
 
     size_t shift = (level - 1) * vpn_part_bits;                    // select this level's vpn_part (top-down)
     size_t index = (full_vpn & (vpn_part_mask << shift)) >> shift; // extract this level's vpn_part and shift to LSB
-    size_t scale = (1ULL << PT_BYTES_SHIFT);                       // 8 bytes (PTE size)
+    size_t scale = PTE_SIZE;
 
     size_t *pte_addr = (size_t *)(base + index * scale);
     return pte_addr;
@@ -95,4 +97,62 @@ int allocate_page(size_t start_va) {
         base = ppn << POBITS;       // convert ppn to base address for next level
     }
     return -1;
+}
+
+static size_t count_valid_ptes(size_t base) {
+    size_t count = 0;
+    size_t *pagetable = (size_t *)base;
+    for (size_t i = 0; i < PAGE_SIZE / PTE_SIZE; ++i) {
+        if (pagetable[i] & VALID_BIT) {
+            ++count;
+        }
+    }
+    return count;
+}
+
+int deallocate_page(size_t start_va) {
+    if ((start_va % PAGE_SIZE) != 0) { // start_va must be at the start of a page
+        return -1;
+    }
+
+    if (translate(start_va) == (size_t)-1) { // memory already deallocated
+        return 0;
+    }
+
+    size_t pt_bases[LEVELS + 1]; // make level 0 = data page, 1 = pt1, ...
+    size_t *pte_addrs[LEVELS];   // just LEVEL ptes because they go between
+
+    size_t base = ptbr;
+    pt_bases[LEVELS] = base; // set initial base because we don't do it in the loop
+                             // (it makes indexing easier)
+
+    // walk down (and save path)
+    for (size_t level = LEVELS; level > 0; --level) {
+        size_t *pte_addr = pte_addr_at_level(start_va, level, base);
+        pte_addrs[level - 1] = pte_addr;
+
+        base = (*pte_addr) & (~(PAGE_SIZE - 1)); // extract top bits of PTE == PPN
+        pt_bases[level - 1] = base;
+    }
+
+    // deallocate data page
+    *pte_addrs[DATA_PAGE_INDEX] &= ~VALID_BIT; // set parent pagetable invalid
+    free((void *)pt_bases[DATA_PAGE_INDEX]);
+
+    // walk up (from path)
+    for (size_t level = 1; level < LEVELS; ++level) {
+        base = pt_bases[level];
+        if (count_valid_ptes(base) > 0) {
+            return 1;
+        }
+        *pte_addrs[level] &= ~VALID_BIT; // set parent pagetable invalid
+        free((void *)base);
+    }
+
+    // free root if contains no entries
+    if (count_valid_ptes(ptbr) == 0) {
+        free((void *)ptbr);
+        ptbr = 0;
+    }
+    return 1;
 }
