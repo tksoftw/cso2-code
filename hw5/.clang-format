@@ -1,0 +1,26 @@
+BasedOnStyle: LLVM
+
+# indentation 
+IndentWidth: 4
+UseTab: Never
+
+# braces { on same line, } on own line 
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterControlStatement: Never
+  AfterFunction: false
+  BeforeElse: true
+AllowShortIfStatementsOnASingleLine: false
+AllowShortBlocksOnASingleLine: false
+
+# spaces around binary operators (like + and *)
+SpaceBeforeAssignmentOperators: true
+# space before ( only for 'if', 'while', etc.
+SpaceBeforeParens: ControlStatements
+# no spaces inside () or []
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# stop weird formatting
+SortIncludes: false
+ColumnLimit: 0
