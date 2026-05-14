@@ -10,5 +10,5 @@
 *_.*
 *.tar
 # hide life due to license
-hw6/life/*
-!hw6/life/life-parallel.c
+hws/hw6/life/*
+!hws/hw6/life/life-parallel.c
